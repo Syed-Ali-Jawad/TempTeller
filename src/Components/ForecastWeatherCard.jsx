@@ -45,7 +45,7 @@ export default function ForecastWeatherCard() {
       }
     };
     fetchData();
-    let interval = setInterval(() => fetchData(), 30000);
+    let interval = setInterval(() => fetchData(), 600000);
     return () => {
       clearInterval(interval);
     };
@@ -56,6 +56,9 @@ export default function ForecastWeatherCard() {
       <Card className="forecast-weather-cards">
         {weatherDataArr.length > 0 ? (
           <>
+            {searchedCity ? (
+              <h1 style={{ margin: "auto" }}>{searchedCity}</h1>
+            ) : null}
             <h1 style={{ margin: "auto" }}>{dateFilterForecast}</h1>
             <hr style={{ width: "100%" }} />
             {weatherDataArr.map((weatherData) => (

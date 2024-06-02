@@ -45,7 +45,7 @@ export default function ForecastWeatherCard() {
       }
     };
     fetchData();
-    let interval = setInterval(() => fetchData(), 10000);
+    let interval = setInterval(() => fetchData(), 30000);
     return () => {
       clearInterval(interval);
     };

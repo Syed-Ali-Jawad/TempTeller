@@ -48,7 +48,7 @@ export default function CurrentWeatherCard() {
       };
 
       fetchedData();
-      interval = setInterval(() => fetchedData(), 30000);
+      interval = setInterval(() => fetchedData(), 600000);
     }
     return () => {
       clearInterval(interval);

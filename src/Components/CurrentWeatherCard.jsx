@@ -8,9 +8,10 @@ export default function CurrentWeatherCard() {
   const [weatherData, setWeatherData] = useState(
     JSON.parse(localStorage.getItem("WeatherData"))
   );
-  const searchedCity = useSelector((state) => state.searchedCity);
   const latitude = useSelector((state) => state.latitude);
   const longitude = useSelector((state) => state.longitude);
+  const searchedCity = useSelector((state) => state.searchedCity);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,7 +25,7 @@ export default function CurrentWeatherCard() {
         console.log("Could not retreive data");
       }
     );
-    if (longitude && latitude) {
+    if (latitude && longitude) {
       const fetchedData = async () => {
         if (searchedCity) {
           const fetchFn = await fetch(
@@ -43,8 +44,6 @@ export default function CurrentWeatherCard() {
           localStorage.setItem("WeatherData", JSON.stringify(weatherData));
           setWeatherData(weatherData);
         }
-        console.log(weatherData);
-        console.log(latitude, longitude);
       };
 
       fetchedData();
@@ -56,17 +55,23 @@ export default function CurrentWeatherCard() {
   }, [latitude, longitude, searchedCity]);
   return (
     <Card className="current-weather-card">
-      <h1>
-        {weatherData && weatherData.cod !== "400"
-          ? weatherData.name
-          : "No data found"}
-      </h1>
-      <h1>
-        {new Date().toLocaleDateString("en-UK", { weekday: "long" })}{" "}
-        {new Date().toLocaleDateString("en-UK")}
-      </h1>
-      <hr />
-      <WeatherDetailCardsDisplay weatherData={weatherData} />
+      {!searchedCity && !weatherData && !latitude && !longitude ? (
+        <p style={{ color: "white" }}>
+          Select a city or provide location access
+        </p>
+      ) : weatherData && weatherData.cod !== "400" ? (
+        <>
+          <h1>{weatherData.name}</h1>
+          <h1>
+            {new Date().toLocaleDateString("en-UK", { weekday: "long" })}{" "}
+            {new Date().toLocaleDateString("en-UK")}
+          </h1>
+          <hr />
+          <WeatherDetailCardsDisplay weatherData={weatherData} />
+        </>
+      ) : (
+        <p style={{ color: "white" }}>No Data Found</p>
+      )}
     </Card>
   );
 }

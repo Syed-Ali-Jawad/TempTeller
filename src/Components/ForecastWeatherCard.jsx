@@ -7,6 +7,9 @@ export default function ForecastWeatherCard() {
   const [weatherDataArr, setWeatherDataArr] = useState([]);
   const latitude = useSelector((state) => state.latitude);
   const longitude = useSelector((state) => state.longitude);
+  const [dataLoadStatus, setDataLoadStatus] = useState(
+    <p style={{ color: "white" }}>Loading...</p>
+  );
 
   const dateFilterForecast = useSelector((state) => state.dateFilterForecast);
   const searchedCity = useSelector((state) => state.searchedCity);
@@ -45,6 +48,16 @@ export default function ForecastWeatherCard() {
       }
     };
     fetchData();
+    setTimeout(
+      () =>
+        setDataLoadStatus(
+          <p style={{ color: "white" }}>
+            Could not load data.
+            <br /> Either select a city or provide location access.{" "}
+          </p>
+        ),
+      3000
+    );
     let interval = setInterval(() => fetchData(), 600000);
     return () => {
       clearInterval(interval);
@@ -54,19 +67,24 @@ export default function ForecastWeatherCard() {
   return (
     <>
       <Card className="forecast-weather-cards">
-        {weatherDataArr.length > 0 ? (
-          <>
-            {searchedCity ? (
-              <h1 style={{ margin: "auto" }}>{searchedCity}</h1>
-            ) : null}
-            <h1 style={{ margin: "auto" }}>{dateFilterForecast}</h1>
-            <hr style={{ width: "100%" }} />
-            {weatherDataArr.map((weatherData) => (
-              <WeatherDetailCardsDisplay weatherData={weatherData} />
-            ))}
-          </>
+        {searchedCity || (latitude && longitude) ? (
+          weatherDataArr.length > 0 ? (
+            <>
+              {searchedCity ? (
+                <h1 style={{ margin: "auto" }}>{searchedCity}</h1>
+              ) : null}
+              <h1 style={{ margin: "auto" }}>{dateFilterForecast}</h1>
+              <hr style={{ width: "100%" }} />
+
+              {weatherDataArr.map((weatherData) => (
+                <WeatherDetailCardsDisplay weatherData={weatherData} />
+              ))}
+            </>
+          ) : (
+            <>{dataLoadStatus}</>
+          )
         ) : (
-          <p style={{ color: "white" }}>Could not fetch data</p>
+          dataLoadStatus
         )}
       </Card>
     </>

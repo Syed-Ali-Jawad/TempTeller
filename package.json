@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://syed-ali-jawad.github.io/TempTeller/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -22,11 +22,6 @@ export default function CurrentWeatherCard() {
       },
       () => {
         console.log("Could not retreive data");
-      },
-      {
-        enableHighAccuracy: true,
-        maximumAge: 10000,
-        timeout: 5000,
       }
     );
     if (longitude && latitude) {

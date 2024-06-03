@@ -6,7 +6,9 @@ import { Card } from "antd";
 
 export default function CurrentWeatherCard() {
   const [weatherData, setWeatherData] = useState(
-    JSON.parse(localStorage.getItem("WeatherData"))
+    JSON.parse(localStorage.getItem("WeatherData")) ||
+      JSON.parse(localStorage.getItem("Selected City Weather")) ||
+      null
   );
   const latitude = useSelector((state) => state.latitude);
   const longitude = useSelector((state) => state.longitude);
@@ -33,7 +35,10 @@ export default function CurrentWeatherCard() {
           );
           const response = await fetchFn.json();
           const weatherData = response;
-
+          localStorage.setItem(
+            "Selected City Weather",
+            JSON.stringify(weatherData)
+          );
           setWeatherData(weatherData);
         } else {
           const fetchFn = await fetch(
@@ -59,7 +64,7 @@ export default function CurrentWeatherCard() {
         <p style={{ color: "white" }}>
           Select a city or provide location access
         </p>
-      ) : weatherData && weatherData.cod !== "400" ? (
+      ) : weatherData && weatherData.cod !== ("400" || "404") ? (
         <>
           <h1>{weatherData.name}</h1>
           <h1>

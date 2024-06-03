@@ -6,7 +6,7 @@ import windSpeedIcon from "../assets/wind-speed-icon.png";
 import humidityIcon from "../assets/humidity-icon.svg";
 
 export default function WeatherDetailCardsDisplay({ weatherData }) {
-  if (weatherData && weatherData.cod !== "400") {
+  if (weatherData && weatherData.cod !== ("400" || "404")) {
     return (
       <>
         {weatherData.dt_txt ? (

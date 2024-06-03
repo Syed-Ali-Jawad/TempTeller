@@ -5,6 +5,9 @@ import { Card } from "antd";
 
 export default function ForecastWeatherCard() {
   const [weatherDataArr, setWeatherDataArr] = useState([]);
+  const [weatherForecast, setWeatherForecast] = useState(
+    JSON.parse(localStorage.getItem("Weather Forecast")) || null
+  );
   const latitude = useSelector((state) => state.latitude);
   const longitude = useSelector((state) => state.longitude);
   const [dataLoadStatus, setDataLoadStatus] = useState(
@@ -15,38 +18,42 @@ export default function ForecastWeatherCard() {
   const searchedCity = useSelector((state) => state.searchedCity);
 
   useEffect(() => {
+    let weatherData = null;
     const fetchData = async function () {
-      let weatherData = null;
       let fetchFn = null;
-      if (searchedCity) {
-        fetchFn = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?q=${searchedCity}&units=metric&appid=87e1f7cd698953b43ad00223a9eb36c8`
-        );
+      if (weatherForecast) {
       } else {
-        fetchFn = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=87e1f7cd698953b43ad00223a9eb36c8`
-        );
-      }
-      const response = await fetchFn.json();
-      console.log(response);
-      if (response.cod !== "400") {
-        if (dateFilterForecast) {
-          weatherData = response.list.filter(
-            (element) =>
-              new Date(element.dt_txt).toLocaleDateString("en-UK") ===
-              dateFilterForecast
+        if (searchedCity) {
+          fetchFn = await fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?q=${searchedCity}&units=metric&appid=87e1f7cd698953b43ad00223a9eb36c8`
           );
         } else {
-          weatherData = response.list.filter(
-            (element) =>
-              new Date(element.dt_txt).toLocaleDateString() ===
-              new Date().toLocaleDateString()
+          fetchFn = await fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=87e1f7cd698953b43ad00223a9eb36c8`
           );
         }
-
-        setWeatherDataArr(weatherData);
+        const response = await fetchFn.json();
+        localStorage.setItem("Weather Forecast", JSON.stringify(response));
+        setWeatherForecast(response);
       }
     };
+    if (weatherForecast.cod !== ("400" || "404")) {
+      if (dateFilterForecast) {
+        weatherData = weatherForecast.list.filter(
+          (element) =>
+            new Date(element.dt_txt).toLocaleDateString("en-UK") ===
+            dateFilterForecast
+        );
+      } else {
+        weatherData = weatherForecast.list.filter(
+          (element) =>
+            new Date(element.dt_txt).toLocaleDateString() ===
+            new Date().toLocaleDateString()
+        );
+      }
+
+      setWeatherDataArr(weatherData);
+    }
     fetchData();
     setTimeout(
       () =>
@@ -62,7 +69,7 @@ export default function ForecastWeatherCard() {
     return () => {
       clearInterval(interval);
     };
-  }, [longitude, latitude, dateFilterForecast, searchedCity]);
+  }, [longitude, latitude, dateFilterForecast, searchedCity, weatherForecast]);
 
   return (
     <>

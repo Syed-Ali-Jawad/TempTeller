@@ -1,7 +1,7 @@
 import { Select, ConfigProvider } from "antd";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setSearchedCity, setDateFilterForecast } from "../Store";
+import { setSelectedCity, setDateFilterForecast } from "../Store";
 export default function Filters() {
   const [cities, setCities] = useState([]);
   const [dates, setDates] = useState();
@@ -141,9 +141,9 @@ export default function Filters() {
       <div className="filters">
         <Select
           allowClear
-          onClear={() => dispatch(setSearchedCity(null))}
+          onClear={() => dispatch(setSelectedCity(null))}
           showSearch
-          onChange={(value) => dispatch(setSearchedCity(value))}
+          onChange={(value) => dispatch(setSelectedCity(value))}
           options={cities}
           placeholder="Select City"
         />

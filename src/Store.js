@@ -4,14 +4,14 @@ import { configureStore } from "@reduxjs/toolkit";
 const reduxSlice = createSlice({
   name: "State Management",
   initialState: {
-    searchedCity: null,
-    latitude: null,
-    longitude: null,
+    selectedCity: null,
+    latitude: localStorage.getItem("Latitude") || null,
+    longitude: localStorage.getItem("Longitude") || null,
     dateFilterForecast: new Date().toLocaleDateString("en-UK"),
   },
   reducers: {
-    setSearchedCity(state, action) {
-      state.searchedCity = action.payload;
+    setSelectedCity(state, action) {
+      state.selectedCity = action.payload;
     },
     setLatitude(state, action) {
       state.latitude = action.payload;
@@ -27,7 +27,7 @@ const reduxSlice = createSlice({
 const store = configureStore({ reducer: reduxSlice.reducer });
 
 export const {
-  setSearchedCity,
+  setSelectedCity,
   setLatitude,
   setLongitude,
   setDateFilterForecast,
